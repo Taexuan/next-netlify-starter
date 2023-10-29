@@ -5,7 +5,7 @@ import { AuthContext } from "@contexts/authContext";
 const NavBar = () => {
   const { user, login, logout } = useContext(AuthContext);
   return (
-    <nav className={styles.nav}>
+    <nav>
       <Link href="/">
         <a>Home</a>
       </Link>
