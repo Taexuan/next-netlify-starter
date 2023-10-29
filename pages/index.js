@@ -12,6 +12,7 @@ export default function Home() {
 
       <main>
         <Header title="Welcome to my app!" />
+        <script type="text/javascript" src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
