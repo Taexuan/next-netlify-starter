@@ -1,5 +1,5 @@
-import '@styles/globals.css'
-import AuthContextProvider from "@contexts/authContext"
+import '@styles/globals.css';
+import AuthContextProvider from "@contexts/authContext";
 import Navbar from "@components/Navbar";
 
 function Application({ Component, pageProps }) {
