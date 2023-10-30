@@ -7,10 +7,10 @@ const NavBar = () => {
   return (
     <nav>
       <Link href="/">
-        <a>Home</a>
+        Home
       </Link>
       <Link href="/about">
-        <a>About</a>
+        About
       </Link>
       <li>{!user && <button onClick={login}>Login/Signup</button>}</li>
       <li>{user && <button onClick={logout}>Logout</button>}</li>
