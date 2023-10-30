@@ -33,3 +33,15 @@ code {
   justify-content: center;
   align-items: center;
 }
+
+.image {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+}
+
+.image img {
+  object-fit: contain;
+  height: 100%;
+}
