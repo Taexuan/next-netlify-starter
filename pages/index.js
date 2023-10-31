@@ -4,38 +4,94 @@ import Footer from '@components/Footer'
 import React, { useState } from 'react';
 
 export default function Home() {
-  const [imageSource, setImageSource] = useState('https://cdn.myanimelist.net/images/characters/4/201257.jpg');
-  const [charName, setName] = useState('Haruka Niimi');
-  const [anime, setAnime] = useState('Test');
+  const [imageSource, setImageSource] = useState('https://s4.anilist.co/file/anilistcdn/character/large/b176754-Ya46QWtQuXzQ.png');
+  const [charName, setName] = useState('Frieren');
+  const [anime, setAnime] = useState('Sousou no Frieren');
+  //max ammount of animes: https://anilist.co/graphiql?query=%7B%0A%20%20SiteStatistics%20%7B%0A%20%20%20%20characters(sort%3A%20COUNT_DESC)%20%7B%0A%20%20%20%20%20%20nodes%20%7B%0A%20%20%20%20%20%20%20%20count%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D%0A
+  const maxAnime = 139989;
+  const [random, setR] = useState(Math.ceil(Math.random()*maxAnime));
+  const [variables, setVar] = useState({page: Math.ceil(random/50)});
+  const [rai, setRa] = useState(random % 50);
 
-  const callAPI = async () => {
-		try {
-			const res = await fetch(
-				`https://api.jikan.moe/v4/random/characters`
-			);
-			const data = await res.json();
-			console.log(data.data);
-      setImageSource(data.data.images.jpg.image_url);
-      setName(data.data.name);
-      animeById(data.data.mal_id);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+  var query = `
+  query ($page: Int){
+    Page(page: $page) {
+      characters {
+        name {
+          full
+        }
+        siteUrl
+        image {
+          large
+        }
+        gender
+        media(sort: ID) {
+          edges {
+            node {
+              title {
+                romaji
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  `;
 
-  const animeById = async (id) => {
-		try {
-			const res = await fetch(
-				`https://api.jikan.moe/v4/characters/${id}/anime`
-			);
-			const data = await res.json();
-			console.log(data.data);
-      setAnime(data.data[0].anime.title);
-		} catch (err) {
-			console.log(err);
-		}
-	};
+function callAPI() {
+  setR(Math.ceil(Math.random()*maxAnime));
+  setVar({page: Math.ceil(random/50)});
+  setRa(random % 50);
+  fetch(url, options).then(handleResponse)
+  .then(handleData)
+  .catch(handleError)
+}
 
+var url = 'https://graphql.anilist.co',
+    options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: variables
+        })
+    };
+
+
+function handleResponse(response) {
+    return response.json().then(function (json) {   
+        return response.ok ? json : Promise.reject(json);
+    });
+}
+
+function handleData(data) {  
+  let result = data.data.Page.characters.reduce(function (r, a) {
+    r[a.gender] = r[a.gender] || [];
+    r[a.gender].push(a);
+    return r;
+}, Object.create(null));1
+    if (result.Female) {
+      let randomIndex = Math.ceil(Math.random()*result.Female.length-1);
+      setName(result.Female[randomIndex].name.full);
+      setAnime(result.Female[randomIndex].media.edges[0].node.title.romaji);
+      setImageSource(result.Female[randomIndex].image.large);
+    } else {
+      let randomIndex = Math.ceil(Math.random()*result.null.length-1);
+      setName(result.null[randomIndex].name.full);
+      setAnime(result.null[randomIndex].media.edges[0].node.title.romaji);
+      setImageSource(result.null[randomIndex].image.large);
+      alert("You didn't role a female, unlucky :)");
+    }
+}
+
+function handleError(error) {
+    console.log('Error, check console');
+    console.error(error);
+}
 
   return (
     <div className="container">
