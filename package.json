@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "export": "next export"
+    "export": "next export",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@netlify/planetscale": "^1.1.0",
