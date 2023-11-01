@@ -2,8 +2,25 @@ import Head from 'next/head'
 import Header from '@components/Header'
 import Footer from '@components/Footer'
 import React, { useState } from 'react';
+import { PrismaClient } from '@prisma/client';
 
 export default function Home() {
+  const prisma = new PrismaClient();
+  async function main() {
+    const allUsers = await prisma.user.findMany()
+    console.log(allUsers)
+  }
+
+  main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+
   const [imageSource, setImageSource] = useState('https://s4.anilist.co/file/anilistcdn/character/large/b176754-Ya46QWtQuXzQ.png');
   const [charName, setName] = useState('Frieren');
   const [anime, setAnime] = useState('Sousou no Frieren');
