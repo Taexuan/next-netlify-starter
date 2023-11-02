@@ -4,7 +4,20 @@ import Footer from '@components/Footer'
 import React, { useState } from 'react';
 import prisma from '@contexts/prisma';
 
-export default function Home() {
+export async function getStaticProps(context) {
+  const data = await prisma.user.findMany();
+
+  const users = data.map((user) => ({
+    ...user,
+    id: user.id.toString(),
+  }));
+
+  return {
+    props: { users },
+  };
+}
+
+export default function Home({users}) {
   const [imageSource, setImageSource] = useState('https://s4.anilist.co/file/anilistcdn/character/large/b176754-Ya46QWtQuXzQ.png');
   const [charName, setName] = useState('Frieren');
   const [anime, setAnime] = useState('Sousou no Frieren');
@@ -102,6 +115,11 @@ function handleError(error) {
       </Head>
 
       <main>
+        <div>
+          {users.map((user) => (
+            <p>{user.name}</p>
+          ))}
+        </div>
         <Header title="Welcome to my app!" />
         <button onClick={callAPI}>Make API call</button>
         <p>{charName} - {anime}</p>
@@ -113,9 +131,4 @@ function handleError(error) {
       <Footer />
     </div>
   )
-}
-
-export async function getStaticProps(context) {
-  const data = await prisma.user.findMany();
-  console.log(data);
 }
