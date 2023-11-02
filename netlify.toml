@@ -4,4 +4,9 @@
 
 [[plugins]]
   package = "netlify-plugin-cypress"
-  package = 'netlify-plugin-prisma-provider'
+
+[[plugins]]
+package = 'netlify-plugin-prisma-provider'
+  [plugins.inputs]
+  path = 'prisma/schema.prisma'
+  varName = 'mysql'  
